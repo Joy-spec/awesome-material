@@ -1,0 +1,45 @@
+centos7作web服务器搭建环境
+
+1.安装jdk配置java环境
+检验系统原版本
+[root@storm ~]# java -version
+进一步查看JDK信息：
+[root@storm ~]# rpm -qa | grep java
+卸载：
+[root@storm etc]# rpm -e --nodeps [所有的java包]
+
+安装JDK
+上传新的jdk-8-linux-x64.rpm软件到/usr/local/执行以下操作：
+[root@storm local]# rpm -ivh jdk-8-linux-x64.rpm
+JDK默认安装在/usr/java中
+
+配置环境变量
+vi + /etc/profile
+向文件里面追加以下内容：
+JAVA_HOME=/usr/java/jdk1.7.0
+JRE_HOME=/usr/java/jdk1.7.0/jre
+PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
+CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib
+export JAVA_HOME JRE_HOME PATH CLASSPATH
+使修改生效
+[root@storm local]# source /etc/profile   //使修改立即生效
+[root@storm local]#        echo $PATH   //查看PATH值
+
+查看系统环境状态
+[root@storm ~]# echo $PATH
+/usr/local/cmake/bin:/usr/lib64/qt-3.3/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/java/jdk1.7.0/bin:/usr/java/jdk1.7.0/jre/bin:/root/bin
+
+执行以下操作，查看信息是否正常：
+[root@storm bin]# java
+[root@storm bin]# javac
+[root@storm bin]# java -version
+
+2.安装Tomcat
+[root@storm local]# wget http://apache.fayea.com/apache-mirror/tomcat/tomcat-7/v7.0.57/bin/apache-tomcat-7.0.57.tar.gz  //获取压缩包
+[root@storm local]# tar -zxv -f apache-tomcat-7.0.29.tar.gz // 解压压缩包  
+启动Tomcat:到Tomcat安装目录的/bin下，执行命令
+[root@storm bin]# ./startup.sh
+
+3.安装MySQL
+
+4.安装nginx
