@@ -1,0 +1,68 @@
+一、编程规约
+
+(一) 命名规约
+	1.中括号是数组类型的一部分，数组定义如下：String[] args;请勿使用String args[]的方式来定义。
+
+	2.POJO 类中的任何布尔类型的变量，都不要加is，否则部分框架解析会引起序列化错误。反例：定义为基本数据类型boolean isSuccess；的属性，它的方法也是isSuccess()，RPC框架在反向解析的时候，“以为”对应的属性名称是success，导致属性获取不到，进而抛出异常。
+
+(二) 常量定义
+	1.不允许出现任何魔法值（即未经定义的常量）直接出现在代码中。
+
+	2.long 或者Long 初始赋值时，必须使用大写的L，不能是小写的l，小写容易跟数字1混淆，造成误解。
+
+	3.常量的复用层次有五层：跨应用共享常量、应用内共享常量、子工程内共享常量、包内共享常量、类内共享常量。
+		1） 跨应用共享常量：放置在二方库中，通常是client.jar 中的const 目录下。
+		2） 应用内共享常量：放置在一方库的modules 中的const 目录下。
+
+(三) 格式规约
+	1.单行字符数限制不超过120 个，超出需要换行，换行时，遵循如下原则：
+		1） 换行时相对上一行缩进4 个空格。
+		2） 运算符与下文一起换行。
+		3） 方法调用的点符号与下文一起换行。
+		4） 在多个参数超长，逗号后进行换行。
+		5） 在括号前不要换行，见反例。
+
+	2.方法体内的执行语句组、变量的定义语句组、不同的业务逻辑之间或者不同的语义之间插入一个空行。相同业务逻辑和语义之间不需要插入空行。没有必要插入多行空格进行隔开。
+
+(四) OOP 规约
+	1.避免通过一个类的对象引用访问此类的静态变量或静态方法，无谓增加编译器解析成本，直接用类名来访问即可。
+
+	2.所有的覆写方法，必须加@Override 注解。getObject()与get0bject()的问题。一个是字母的O，一个是数字的0，加@Override可以准确判断是否覆盖成功。另外，如果在抽象类中对方法签名进行修改，其实现类会马上编译报错。
+
+	3.Object 的equals 方法容易抛空指针异常，应使用常量或确定有值的对象来调用equals。正例： "test".equals(object)。
+
+	4.所有的相同类型的包装类对象之间值的比较，全部使用equals 方法比较。说明：对于Integer var=?在-128 至127 之间的赋值，Integer 对象是在IntegerCache.cache产生，会复用已有对象，这个区间内的Integer 值可以直接使用==进行判断，但是这个区间之外的所有数据，都会在堆上产生，并不会复用已有对象，这是一个大坑，推荐使用equals 方法进行判断。
+
+	5.序列化类新增属性时，请不要修改serialVersionUID 字段，避免反序列失败；如果完全不兼容升级，避免反序列化混乱，那么请修改serialVersionUID 值。说明：注意serialVersionUID 不一致会抛出序列化运行时异常。
+
+	6.使用索引访问用String 的split 方法得到的数组时，需做最后一个分隔符后有无内容的检查，否则会有抛IndexOutOfBoundsException 的风险。
+
+	7.循环体内，字符串的联接方式，使用StringBuilder 的append 方法进行扩展。
+	反例：
+		String str = "start";
+		for(int i=0; i<100; i++){
+			str = str + "hello";
+		}
+	说明：反编译出的字节码文件显示每次循环都会new 出一个StringBuilder 对象，然后进行append 操作，最后通过toString 方法返回String 对象，造成内存资源浪费。
+
+(五) 集合处理
+	1.Map/Set 的key 为自定义对象时，必须重写hashCode 和equals。正例：String 重写了hashCode 和equals 方法，所以我们可以非常愉快地使用String 对象作为key 来使用。
+
+	2.ArrayList 的subList 结果不可强转成ArrayList，否则会抛出ClassCastException异常：java.util.RandomAccessSubList cannot be cast to java.util.ArrayList ;
+	说明：subList 返回的是 ArrayList 的内部类 SubList，并不是 ArrayList ，而是 ArrayList的一个视图，对于SubList 子列表的所有操作最终会反映到原列表上。
+
+	3.在subList 场景中，高度注意对原集合元素个数的修改，会导致子列表的遍历、增加、删除均产生ConcurrentModificationException 异常。
+
+	4.使用集合转数组的方法，必须使用集合的toArray(T[] array)，传入的是类型完全一样的数组，大小就是list.size()。直接使用toArray 无参方法存在问题，此方法返回值只能是Object[]类，若强转其它类型数组将出现ClassCastException 错误。
+	说明：使用toArray 带参方法，入参分配的数组空间不够大时，toArray 方法内部将重新分配内存空间，并返回新数组地址；如果数组元素大于实际所需，下标为[ list.size() ]的数组元素将被置为null，其它数组元素保持原值，因此最好将方法入参数组大小定义与集合元素个数一致。
+
+	5.使用工具类Arrays.asList()把数组转换成集合时，不能使用其修改集合相关的方法，它的add/remove/clear 方法会抛出UnsupportedOperationException 异常。
+	说明：asList 的返回对象是一个Arrays 内部类，并没有实现集合的修改方法。Arrays.asList体现的是适配器模式，只是转换接口，后台的数据仍是数组。String[] str = new String[] { "a", "b" };List list = Arrays.asList(str);第一种情况：list.add("c"); 运行时异常。第二种情况：str[0]= "gujin"; 那么list.get(0)也会随之修改。
+
+	6.泛型通配符<? extends T>来接收返回的数据，此写法的泛型集合不能使用add 方法。
+	说明：苹果装箱后返回一个<? extends Fruits>对象，此对象就不能往里加任何水果，包括苹果。
+
+	7.不要在foreach 循环里进行元素的remove/add 操作。remove 元素请使用Iterator方式，如果并发操作，需要对Iterator 对象加锁。
+
+(六) 并发处理
+	1.

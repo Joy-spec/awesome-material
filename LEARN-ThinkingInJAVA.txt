@@ -85,4 +85,25 @@ java中的数组：
 	Java确保数组会被初始化，而且不能在它的范围之外被访问。这种范围检查，是以每个数组上少量的内存开销及运行时的下标检查为代价的。
 
 永远不要销毁对象：
-	
+	由new创建的对象，只要你需要，就会一直保留下去。垃圾回收器自动回收。
+
+基本成员默认值：
+	boolean：false;	char：‘\u0000’(null);	byte:(byte)0;	short:(short)0;		int:0;	long:0L;	float:0.0f;	double:0.0d;
+
+static：
+	一个static字段对每个类来说都只有一份存储空间，而非static字段则是对每个对象有一个存储空间。
+	static方法的一个重要用法就是在不创建任何对象的前提下就可以调用它。这一点对于main()方法很重要。
+
+javadoc命令：
+	Javadoc是Sun公司提供的一个技术，它从程序源代码中抽取类、方法、成员等注释形成一个和源代码配套的API帮助文档。也就是说，只要在编写程序时以一套特定的标签作注释，在程序编写完成后，通过Javadoc就可以同时形成程序的开发文档了。
+	@author 作者名
+	@date 日期
+	@version 版本标识
+	@parameter 参数及其意义
+	@since 最早使用该方法/类/接口的JDK版本
+	@return 返回值
+	@throws 异常类及抛出条件
+	@deprecated 引起不推荐使用的警告
+	@see reference 查看引用
+	@override 重写
+
