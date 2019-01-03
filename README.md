@@ -34,7 +34,7 @@
 
 [神经网络与机器学习（加）SimonHaykin](Book/神经网络与机器学习（加）SimonHaykin.pdf)
 
-[神经?络与深度学习（美）Michael Nielsen](Book/神经?络与深度学习（美）Michael Nielsen.pdf)
+[神经?络与深度学习（美）MichaelNielsen](Book/神经?络与深度学习（美）MichaelNielsen.pdf)
 
 [d2l-zh（动?学深度学习）](Book/d2l-zh（动?学深度学习）.pdf)
 
