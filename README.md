@@ -32,7 +32,7 @@
 
 [深度学习](Book/深度学习.pdf)
 
-[神经网络与机器学习（加）Simon Haykin](Book/神经网络与机器学习（加）Simon Haykin.pdf)
+[神经网络与机器学习（加）SimonHaykin](Book/神经网络与机器学习（加）SimonHaykin.pdf)
 
 [神经?络与深度学习（美）Michael Nielsen](Book/神经?络与深度学习（美）Michael Nielsen.pdf)
 
